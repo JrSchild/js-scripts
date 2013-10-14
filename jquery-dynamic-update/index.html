@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>jQuery dynamic update plugin</title>
+	</head>
+	<body>
+		<div id="container"></div>
+
+		<script type="text/html" id="template">
+<div data-dynamic="users">
+	<h4>Users</h4>
+	<table>
+		<tr>
+			<td>id</td><td>name</td><td>age</td>
+		</tr>
+		<% for (var i = 0, l = users.length; i < l; i++) { %>
+		<tr data-dynamic="users:<%= users[i].id %>">
+			<td><%= users[i].id %></td><td><%= users[i].name %></td><td><%= users[i].age %></td>
+		</tr>
+		<% } %>
+	</table>
+</div>
+<div data-dynamic="list">
+	<ul>
+		<% for (var i = 0; i < length; ) { %>
+			<li data-dynamic-2-id="<%= ++i %>">Item <%= i %></li>
+		<% } %>
+	</ul>
+</div>
+<div>
+	<p></p>
+	<p></p>
+</div>
+		</script>
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="./js/dynamic-update.js"></script>
+		<script src="./js/lodash.js"></script>
+		<script>
+$(function() {
+	var data1 = {
+		users: [
+			{id: 1, name: 'John Doe', age: 41},
+			{id: 2, name: 'Mike', age: 29},
+			{id: 3, name: 'Peter', age: 21}
+		],
+		length: 5,
+	};
+	var data2 = {
+		users: [],
+		length: 9,
+	};
+	var data3 = {
+		users: [
+			{id: 1, name: 'Jane Doe', age: 50},
+			{id: 2, name: 'Tarantino', age: 51},
+		],
+		length: 0,
+	}
+	var data4 = {
+		users: [
+			{id: 1, name: 'Jane Doe', age: 50},
+			{id: 2, name: 'Quintin Tarantino', age: 51},
+			{id: 5, name: 'Julie', age: 35}
+		],
+		length: 0,
+	}
+
+	var html = $('#template').html();
+	var tmpl = _.template(html);
+
+	function giveColor(color, time) {
+		if (!time) {
+			setTimeout(function() {
+				giveColor(color, true)
+			}, 500);
+		} else {
+			$('li, tr').css({color: color});
+		}
+	}
+
+	// Render template into container
+	var container = $('#container').html(tmpl(data1));
+
+	setTimeout(function() {
+		container.dynamicUpdate(tmpl(data2), ['list']);
+	}, 1000);
+
+	setTimeout(function() {
+		container.dynamicUpdate(tmpl(data3), ['users:1|2']);
+	}, 2000);
+
+	setTimeout(function() {
+		container.dynamicUpdate(tmpl(data4), ['users:+']);
+	}, 3000);
+
+	setTimeout(function() {
+		container.dynamicUpdate(tmpl(data4), ['users:x']);
+	}, 4000);
+});
+		</script>
+	</body>
+</html>
