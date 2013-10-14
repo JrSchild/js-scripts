@@ -14,6 +14,20 @@
 			var $this = this;
 			var $html = $('<div/>').html(html);
 
+			// if no settings provided, fetch all settings from DOM.
+			if (!settings) {
+				var dynamicElems = this.find('[data-dynamic]');
+				settings = [];
+
+				dynamicElems.each(function() {
+					var name = $(this).attr('data-dynamic');
+					if (!name.match(/\:/)) {
+						settings.push(name);
+					}
+				})
+
+			}
+
 			$.each(settings, function(i) {
 				var setting = settings[i].split(/\:|\|/);
 				var mainSelector = '[data-dynamic="' + setting[0] + '"]';

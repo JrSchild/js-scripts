@@ -48,7 +48,9 @@ $(function() {
 		length: 5,
 	};
 	var data2 = {
-		users: [],
+		users: [
+			{id: 10, name: 'Mr. Yoyo', age: 87}
+		],
 		length: 9,
 	};
 	var data3 = {
@@ -98,6 +100,11 @@ $(function() {
 	setTimeout(function() {
 		container.dynamicUpdate(tmpl(data4), ['users:x']);
 	}, 4000);
+
+	// Update all dynamic elements
+	setTimeout(function() {
+		container.dynamicUpdate(tmpl(data2));
+	}, 5000);
 });
 		</script>
 	</body>
